@@ -1612,6 +1612,8 @@ containing a value of this type.
         public static final int abc_textfield_search_material=0x7f020032;
     }
     public static final class id {
+        public static final int ArtistList=0x7f090041;
+        public static final int SearchArtistTxt=0x7f090040;
         public static final int action_bar=0x7f090031;
         public static final int action_bar_activity_content=0x7f090000;
         public static final int action_bar_container=0x7f090030;
@@ -1625,7 +1627,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f09002e;
         public static final int action_mode_bar_stub=0x7f09002d;
         public static final int action_mode_close_button=0x7f090020;
-        public static final int action_settings=0x7f090040;
+        public static final int action_settings=0x7f090042;
         public static final int activity_chooser_view_content=0x7f090021;
         public static final int always=0x7f090016;
         public static final int beginning=0x7f090013;
@@ -1707,7 +1709,9 @@ containing a value of this type.
         public static final int abc_simple_dropdown_hint=0x7f040016;
         public static final int activity_main=0x7f040017;
         public static final int fragment_main=0x7f040018;
-        public static final int support_simple_spinner_dropdown_item=0x7f040019;
+        public static final int fragment_player=0x7f040019;
+        public static final int fragment_top_songs=0x7f04001a;
+        public static final int support_simple_spinner_dropdown_item=0x7f04001b;
     }
     public static final class menu {
         public static final int menu_main=0x7f0d0000;
