@@ -6,7 +6,7 @@
     <ImageView
         android:layout_width="@android:dimen/notification_large_icon_height"
         android:layout_height="@android:dimen/notification_large_icon_height"
-        android:id="@+id/imageView"
+        android:id="@+id/ArtistImg"
         android:src="@mipmap/ic_launcher"
         android:layout_gravity="center_vertical" />
 
