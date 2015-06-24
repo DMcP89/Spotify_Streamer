@@ -10,21 +10,27 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.Arrays;
-
+import android.widget.AdapterView.*;
+import android.widget.*;
+import android.support.v4.app.*;
+/*
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+*/
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements OnItemClickListener {
 
-    public MainActivityFragment() {
+	private FragmentManager fragMan;    
+
+	public MainActivityFragment() {
     }
 
     @Override
@@ -41,10 +47,11 @@ public class MainActivityFragment extends Fragment {
                 Arrays.asList(temp));
 
         View root = inflater.inflate(R.layout.fragment_main, container, false);
-
         ListView listView = (ListView) root.findViewById(R.id.ArtistList);
         listView.setAdapter(mArtistAdapter);
-
+		listView.setOnItemClickListener(this);
+			
+		/*
         SpotifyApi api = new SpotifyApi();
         SpotifyService spotify = api.getService();
         spotify.getArtist("4gzpq5DPGxSnKTe4SA8HAU", new Callback<Artist>() {
@@ -58,8 +65,19 @@ public class MainActivityFragment extends Fragment {
                 Log.i("Spotify",error.toString());
             }
         });
-
-
+		*/
         return root;
     }
+
+	@Override
+	public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4)
+	{
+		getActivity().getSupportFragmentManager().beginTransaction()
+			.replace(this.getId(), new TopTracksFragment(""))
+			.commit();
+	}
+
+	
+	
+
 }
