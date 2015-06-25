@@ -2,25 +2,25 @@ package com.davemcpherson.spotifystreamer;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.Arrays;
-import android.widget.AdapterView.*;
-import android.widget.*;
-import android.support.v4.app.*;
-/*
+
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-*/
+
 
 
 /**
@@ -51,7 +51,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         listView.setAdapter(mArtistAdapter);
 		listView.setOnItemClickListener(this);
 			
-		/*
+
         SpotifyApi api = new SpotifyApi();
         SpotifyService spotify = api.getService();
         spotify.getArtist("4gzpq5DPGxSnKTe4SA8HAU", new Callback<Artist>() {
@@ -65,7 +65,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
                 Log.i("Spotify",error.toString());
             }
         });
-		*/
+
         return root;
     }
 
