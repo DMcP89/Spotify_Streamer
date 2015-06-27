@@ -7,13 +7,13 @@ import android.widget.ArrayAdapter;
 
 import java.util.List;
 
-import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.Artist;
 
 /**
- * Created by dave on 6/26/2015.
+ * Created by dave on 6/27/2015.
  */
-public class TopTrackAdapter extends ArrayAdapter<Track> {
-    public TopTrackAdapter(Context context,List<Track> objects) {
+public class ArtisitAdapter extends ArrayAdapter<Artist> {
+    public ArtisitAdapter(Context context, List<Artist> objects) {
         super(context, 0, objects);
     }
 

@@ -9,13 +9,12 @@ import kaaes.spotify.webapi.android.models.ArtistsPager;
 /**
  * Created by dave on 6/25/2015.
  */
-public class SearchArtistTask extends AsyncTask<Void, Void,Void>{
+public class SearchArtistTask extends AsyncTask<String, Void,ArtistsPager>{
     @Override
-    protected Void doInBackground(Void... params) {
+    protected ArtistsPager doInBackground(String... params) {
         SpotifyApi api = new SpotifyApi();
         SpotifyService spotify = api.getService();
-        ArtistsPager AP = spotify.searchArtists("coldplay");
-
-        return null;
+        ArtistsPager AP = spotify.searchArtists(params[0]);
+        return AP;
     }
 }

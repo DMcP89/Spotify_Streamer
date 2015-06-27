@@ -10,10 +10,15 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.davemcpherson.spotifystreamer.tasks.SearchArtistTask;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistsPager;
 
 
 /**
@@ -46,7 +51,17 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
 
         SearchArtistTask task = new SearchArtistTask();
-        task.execute();
+        task.execute("coldplay");
+        try {
+            ArtistsPager ap = task.get();
+            for(Artist a : ap.artists.items){
+                Toast.makeText(getActivity(), a.toString(),Toast.LENGTH_SHORT).show();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
 
         return root;
