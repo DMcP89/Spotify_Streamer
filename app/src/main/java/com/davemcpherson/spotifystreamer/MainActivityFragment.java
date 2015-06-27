@@ -11,11 +11,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.Arrays;
+import com.davemcpherson.spotifystreamer.tasks.SearchArtistTask;
 
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.ArtistsPager;
+import java.util.Arrays;
 
 
 /**
@@ -45,11 +43,10 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         ListView listView = (ListView) root.findViewById(R.id.ArtistList);
         listView.setAdapter(mArtistAdapter);
 		listView.setOnItemClickListener(this);
-			
 
-        SpotifyApi api = new SpotifyApi();
-        SpotifyService spotify = api.getService();
-        ArtistsPager AP = spotify.searchArtists("coldplay");
+
+        SearchArtistTask task = new SearchArtistTask();
+        task.execute();
 
 
         return root;
