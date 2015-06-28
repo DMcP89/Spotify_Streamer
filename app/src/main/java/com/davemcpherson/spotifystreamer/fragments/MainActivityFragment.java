@@ -1,4 +1,4 @@
-package com.davemcpherson.spotifystreamer;
+package com.davemcpherson.spotifystreamer.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.davemcpherson.spotifystreamer.R;
 import com.davemcpherson.spotifystreamer.tasks.SearchArtistTask;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
+import kaaes.spotify.webapi.android.models.Image;
 
 
 /**
@@ -54,9 +56,14 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
         task.execute("coldplay");
         try {
             ArtistsPager ap = task.get();
-            for(Artist a : ap.artists.items){
-                Toast.makeText(getActivity(), a.toString(),Toast.LENGTH_SHORT).show();
+            for(Artist a : ap.artists.items) {
+                Toast.makeText(getActivity(), a.toString(), Toast.LENGTH_SHORT).show();
+                for(Image i : a.images ){
+                    Toast.makeText(getActivity(),"Image: "+ i.url, Toast.LENGTH_SHORT).show();
+                }
             }
+            //ArtisitAdapter artisitAdapter = new ArtisitAdapter(getActivity(),ap.artists.items);
+            //listView.setAdapter(artisitAdapter);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
