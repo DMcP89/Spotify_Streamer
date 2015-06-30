@@ -1,17 +1,14 @@
 package com.davemcpherson.spotifystreamer.tasks;
 
-import android.os.AsyncTask;
-
-import kaaes.spotify.webapi.android.models.TracksPager;
+import com.davemcpherson.spotifystreamer.commands.TopTracksCommand;
 
 /**
  * Created by dave on 6/27/2015.
  */
-public class TopTracksTask extends AsyncTask<String, Void, TracksPager>{
+public class TopTracksTask extends SpotifyServiceTask{
 
 
-    @Override
-    protected TracksPager doInBackground(String... params) {
-        return null;
+    public TopTracksTask(TopTracksCommand c) {
+        super(c);
     }
 }

@@ -13,11 +13,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.davemcpherson.spotifystreamer.R;
+import com.davemcpherson.spotifystreamer.commands.SearchArtistCommand;
 import com.davemcpherson.spotifystreamer.tasks.SearchArtistTask;
+import com.davemcpherson.spotifystreamer.tasks.SpotifyServiceTask;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import kaaes.spotify.webapi.android.models.Image;
@@ -52,10 +56,13 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 		listView.setOnItemClickListener(this);
 
 
-        SearchArtistTask task = new SearchArtistTask();
+        SpotifyApi api = new SpotifyApi();
+        SpotifyService spotifyService = api.getService();
+        //SearchArtistTask task = new SearchArtistTask(command);
+        SpotifyServiceTask task = new SearchArtistTask(new SearchArtistCommand(spotifyService));
         task.execute("coldplay");
         try {
-            ArtistsPager ap = task.get();
+            ArtistsPager ap = (ArtistsPager)task.get();
             for(Artist a : ap.artists.items) {
                 Toast.makeText(getActivity(), a.toString(), Toast.LENGTH_SHORT).show();
                 for(Image i : a.images ){
