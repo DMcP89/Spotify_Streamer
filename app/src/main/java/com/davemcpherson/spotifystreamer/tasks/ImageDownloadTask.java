@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.davemcpherson.spotifystreamer.commands.ImageDownloadCommand;
+
 import kaaes.spotify.webapi.android.models.Image;
 
 /**
@@ -17,9 +19,11 @@ public class ImageDownloadTask extends AsyncTask<Image, Void, Bitmap> {
         imageView = iv;
     }
 
+    public ImageDownloadTask(){}
+
     @Override
     protected Bitmap doInBackground(Image... params) {
-        return null;
+        return new ImageDownloadCommand().execute(params[0].url);
     }
 
     @Override

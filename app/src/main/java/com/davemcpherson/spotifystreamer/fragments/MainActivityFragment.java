@@ -10,21 +10,15 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.davemcpherson.spotifystreamer.R;
 import com.davemcpherson.spotifystreamer.commands.SearchArtistCommand;
 import com.davemcpherson.spotifystreamer.tasks.SearchArtistTask;
-import com.davemcpherson.spotifystreamer.tasks.SpotifyServiceTask;
 
 import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.ArtistsPager;
-import kaaes.spotify.webapi.android.models.Image;
 
 
 /**
@@ -58,25 +52,18 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
         SpotifyApi api = new SpotifyApi();
         SpotifyService spotifyService = api.getService();
-        //SearchArtistTask task = new SearchArtistTask(command);
-        SpotifyServiceTask task = new SearchArtistTask(new SearchArtistCommand(spotifyService));
+        SearchArtistTask task = new SearchArtistTask(new SearchArtistCommand(spotifyService), listView);
         task.execute("coldplay");
-        try {
+        /*try {
             ArtistsPager ap = (ArtistsPager)task.get();
-            for(Artist a : ap.artists.items) {
-                Toast.makeText(getActivity(), a.toString(), Toast.LENGTH_SHORT).show();
-                for(Image i : a.images ){
-                    Toast.makeText(getActivity(),"Image: "+ i.url, Toast.LENGTH_SHORT).show();
-                }
-            }
-            //ArtisitAdapter artisitAdapter = new ArtisitAdapter(getActivity(),ap.artists.items);
-            //listView.setAdapter(artisitAdapter);
+            ArtisitAdapter artisitAdapter = new ArtisitAdapter(getActivity(),ap.artists.items);
+            listView.setAdapter(artisitAdapter);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
+*/
 
         return root;
     }

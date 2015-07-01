@@ -1,7 +1,6 @@
 package com.davemcpherson.spotifystreamer.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.davemcpherson.spotifystreamer.R;
+import com.davemcpherson.spotifystreamer.tasks.ImageDownloadTask;
 
 import java.util.List;
 
@@ -31,11 +31,17 @@ public class ArtisitAdapter extends ArrayAdapter<Artist> {
         }
 
         ImageView artistImage = (ImageView)convertView.findViewById(R.id.ArtistImg);
-        artistImage.setImageURI(Uri.parse(artist.images.get(0).url));
+        ImageDownloadTask task = new ImageDownloadTask(artistImage);
+        if(!artist.images.isEmpty()) {
+            task.execute(artist.images.get(0));
+        }else{
+            artistImage.setImageResource(R.mipmap.ic_launcher);
+        }
+
 
         TextView artitstName = (TextView)convertView.findViewById(R.id.ArtistNameTxt);
         artitstName.setText(artist.name);
 
-        return null;
+        return convertView;
     }
 }
