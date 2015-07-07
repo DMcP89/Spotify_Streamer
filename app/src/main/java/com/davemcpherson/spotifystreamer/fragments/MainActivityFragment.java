@@ -1,4 +1,4 @@
-package com.davemcpherson.spotifystreamer;
+package com.davemcpherson.spotifystreamer.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,9 +11,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.davemcpherson.spotifystreamer.R;
+import com.davemcpherson.spotifystreamer.commands.SearchArtistCommand;
 import com.davemcpherson.spotifystreamer.tasks.SearchArtistTask;
 
 import java.util.Arrays;
+
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
 
 
 /**
@@ -41,13 +46,24 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
         View root = inflater.inflate(R.layout.fragment_main, container, false);
         ListView listView = (ListView) root.findViewById(R.id.ArtistList);
-        listView.setAdapter(mArtistAdapter);
+        //listView.setAdapter(mArtistAdapter);
 		listView.setOnItemClickListener(this);
 
 
-        SearchArtistTask task = new SearchArtistTask();
-        task.execute();
-
+        SpotifyApi api = new SpotifyApi();
+        SpotifyService spotifyService = api.getService();
+        SearchArtistTask task = new SearchArtistTask(new SearchArtistCommand(spotifyService), listView);
+        task.execute("coldplay");
+        /*try {
+            ArtistsPager ap = (ArtistsPager)task.get();
+            ArtisitAdapter artisitAdapter = new ArtisitAdapter(getActivity(),ap.artists.items);
+            listView.setAdapter(artisitAdapter);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+*/
 
         return root;
     }

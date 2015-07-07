@@ -1,21 +1,34 @@
 package com.davemcpherson.spotifystreamer.tasks;
 
 import android.os.AsyncTask;
+import android.widget.ListView;
 
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
+import com.davemcpherson.spotifystreamer.adapters.ArtisitAdapter;
+import com.davemcpherson.spotifystreamer.commands.SearchArtistCommand;
+
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 
 /**
  * Created by dave on 6/25/2015.
  */
-public class SearchArtistTask extends AsyncTask<Void, Void,Void>{
-    @Override
-    protected Void doInBackground(Void... params) {
-        SpotifyApi api = new SpotifyApi();
-        SpotifyService spotify = api.getService();
-        ArtistsPager AP = spotify.searchArtists("coldplay");
+public class SearchArtistTask extends AsyncTask<String, Void, ArtistsPager>{
 
-        return null;
+    private SearchArtistCommand command;
+    private ListView artistList;
+
+    public SearchArtistTask(SearchArtistCommand c, ListView lv) {
+        this.command = c;
+        this.artistList = lv;
+    }
+
+    @Override
+    protected ArtistsPager doInBackground(String... params) {
+        return command.execute(params[0]);
+    }
+
+    @Override
+    protected void onPostExecute(ArtistsPager artistsPager) {
+        ArtisitAdapter artisitAdapter = new ArtisitAdapter(this.artistList.getContext(), artistsPager.artists.items);
+        this.artistList.setAdapter(artisitAdapter);
     }
 }

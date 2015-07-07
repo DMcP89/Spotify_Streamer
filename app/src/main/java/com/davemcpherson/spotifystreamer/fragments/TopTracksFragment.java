@@ -1,8 +1,11 @@
-package com.davemcpherson.spotifystreamer;
+package com.davemcpherson.spotifystreamer.fragments;
 import android.support.v4.app.*;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
+
+import com.davemcpherson.spotifystreamer.R;
+
 import java.util.*;
 
 public class TopTracksFragment extends Fragment
