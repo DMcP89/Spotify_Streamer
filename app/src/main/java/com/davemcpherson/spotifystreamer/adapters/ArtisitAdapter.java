@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.davemcpherson.spotifystreamer.R;
-import com.davemcpherson.spotifystreamer.tasks.ImageDownloadTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,6 +19,7 @@ import kaaes.spotify.webapi.android.models.Artist;
  * Created by dave on 6/27/2015.
  */
 public class ArtisitAdapter extends ArrayAdapter<Artist> {
+
     public ArtisitAdapter(Context context, List<Artist> objects) {
         super(context, 0, objects);
     }
@@ -26,14 +27,14 @@ public class ArtisitAdapter extends ArrayAdapter<Artist> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
         Artist artist = getItem(position);
-        if(convertView == null){
+
+        if(convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.artist_search_item, parent, false);
         }
 
         ImageView artistImage = (ImageView)convertView.findViewById(R.id.ArtistImg);
-        ImageDownloadTask task = new ImageDownloadTask(artistImage);
         if(!artist.images.isEmpty()) {
-            task.execute(artist.images.get(0));
+            Picasso.with(this.getContext()).load(artist.images.get(0).url).into(artistImage);
         }else{
             artistImage.setImageResource(R.mipmap.ic_launcher);
         }

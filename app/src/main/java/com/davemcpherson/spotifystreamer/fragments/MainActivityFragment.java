@@ -46,7 +46,7 @@ public class MainActivityFragment extends Fragment implements OnItemClickListene
 
         View root = inflater.inflate(R.layout.fragment_main, container, false);
         ListView listView = (ListView) root.findViewById(R.id.ArtistList);
-        listView.setAdapter(mArtistAdapter);
+        //listView.setAdapter(mArtistAdapter);
 		listView.setOnItemClickListener(this);
 
 
