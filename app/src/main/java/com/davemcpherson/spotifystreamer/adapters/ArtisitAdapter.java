@@ -33,16 +33,21 @@ public class ArtisitAdapter extends ArrayAdapter<Artist> {
         }
 
         ImageView artistImage = (ImageView)convertView.findViewById(R.id.ArtistImg);
-        if(!artist.images.isEmpty()) {
-            Picasso.with(this.getContext()).load(artist.images.get(0).url).into(artistImage);
-        }else{
-            artistImage.setImageResource(R.mipmap.ic_launcher);
-        }
+        populateImageView(artistImage,artist);
 
 
         TextView artitstName = (TextView)convertView.findViewById(R.id.ArtistNameTxt);
         artitstName.setText(artist.name);
 
         return convertView;
+    }
+
+
+    public void populateImageView(ImageView artistImage,Artist artist){
+        if(!artist.images.isEmpty()) {
+            Picasso.with(this.getContext()).load(artist.images.get(0).url).into(artistImage);
+        }else{
+            artistImage.setImageResource(R.mipmap.ic_launcher);
+        }
     }
 }

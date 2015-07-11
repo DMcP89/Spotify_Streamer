@@ -9,8 +9,9 @@ import kaaes.spotify.webapi.android.models.ArtistsPager;
 public class SearchArtistCommand extends SpotifyCommand {
 
     public SearchArtistCommand(SpotifyService ss) {
-        super(ss);
+        this.spotifyService = ss;
     }
+
 
     @Override
     public ArtistsPager execute(String artist) {
