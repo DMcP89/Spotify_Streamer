@@ -1,39 +1,82 @@
 package com.davemcpherson.spotifystreamer;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.davemcpherson.spotifystreamer.fragments.SearchArtistFragment;
+import com.davemcpherson.spotifystreamer.fragments.TopTracksFragment;
+import com.davemcpherson.spotifystreamer.listeners.OnArtistSelectedListener;
 
-public class MainActivity extends ActionBarActivity {
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Artist;
+
+
+public class MainActivity extends ActionBarActivity implements OnArtistSelectedListener{
+
+    private static final String SEARCH_ARTIST_FRAGMENT= "SearchArtist";
+    private static final String TOP_TRACKS_FRAGMENT= "TopTracks";
+
+    private SpotifyService spotifyService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        spotifyService =new SpotifyApi().getService();
+        SearchArtistFragment fragment = new SearchArtistFragment();
+        fragment.setArguments(spotifyService);
+        if(savedInstanceState == null) {
+            replaceFragment(R.id.fragment_container, fragment, SEARCH_ARTIST_FRAGMENT);
+        }
+
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_settings:
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void OnArtistSelect(Artist artist) {
+        TopTracksFragment newFrag = new TopTracksFragment();
+        newFrag.setArguments(artist, spotifyService);
+        Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(SEARCH_ARTIST_FRAGMENT);
+        replaceFragment(oldFrag.getId(),newFrag,TOP_TRACKS_FRAGMENT);
+    }
+
+
+    private void replaceFragment(int oldFragmentId, Fragment newFragment, String tag){
+        getSupportFragmentManager().beginTransaction()
+                .replace(oldFragmentId, newFragment,tag)
+                .addToBackStack(tag)
+                .commit();
+    }
+
+    private void addFragment(Fragment fragment, String tag)
+    {
+        getSupportFragmentManager().beginTransaction()
+                .add(fragment, tag)
+                .commit();
+    }
+
+
+
+
 }
