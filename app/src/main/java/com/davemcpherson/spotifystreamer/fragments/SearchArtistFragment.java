@@ -51,13 +51,6 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
     public void  onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         artistAdapter = new ArtisitAdapter(getActivity(), new ArrayList<Artist>());
-/*        if(savedInstanceState == null || !savedInstanceState.containsKey(PARCELABLE_TAG)){
-            artistAdapter = new ArtisitAdapter(getActivity(),new ArrayList<Artist>());
-        }else{
-            ArtistParcelable ap = savedInstanceState.getParcelable(PARCELABLE_TAG);
-
-            artistAdapter = new ArtisitAdapter(getActivity(), ap.list);
-        }*/
     }
 
     @Override
@@ -81,10 +74,6 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
 
     @Override
     public void onSaveInstanceState(Bundle outState){
-  /*      if(!(artistAdapter == null)) {
-            ArtistParcelable ap = new ArtistParcelable(artistAdapter.getArrayList());
-            outState.putParcelable(PARCELABLE_TAG, ap);
-        }*/
         super.onSaveInstanceState(outState);
     }
 
