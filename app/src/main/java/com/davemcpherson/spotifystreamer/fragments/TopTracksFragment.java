@@ -26,7 +26,7 @@ public class TopTracksFragment extends Fragment
 	private SpotifyService spotifyService;
 
 	public TopTracksFragment(){
-
+		this.setRetainInstance(true);
 	}
 
 	public void setArguments(Artist a, SpotifyService ss){
