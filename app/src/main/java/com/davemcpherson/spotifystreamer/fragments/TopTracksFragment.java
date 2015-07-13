@@ -26,7 +26,7 @@ public class TopTracksFragment extends Fragment
 	private SpotifyService spotifyService;
 
 	public TopTracksFragment(){
-		getActivity().getActionBar().setTitle("Top Tracks");
+
 	}
 
 	public void setArguments(Artist a, SpotifyService ss){
@@ -38,6 +38,7 @@ public class TopTracksFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+
 		View root = inflater.inflate(R.layout.fragment_top_tracks,container,false);
 
 		lv = (ListView)root.findViewById(R.id.tracksList);
