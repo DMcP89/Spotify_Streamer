@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.davemcpherson.spotifystreamer.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Artist;
@@ -49,5 +50,13 @@ public class ArtisitAdapter extends ArrayAdapter<Artist> {
         }else{
             artistImage.setImageResource(R.mipmap.ic_launcher);
         }
+    }
+
+    public ArrayList<Artist> getArrayList(){
+        ArrayList<Artist> objects = new ArrayList<>(getCount());
+        for (int i = 0; i < getCount(); i++) {
+            objects.add(getItem(i));
+        }
+        return objects;
     }
 }

@@ -15,7 +15,7 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 
 
-public class MainActivity extends ActionBarActivity implements OnArtistSelectedListener {
+public class MainActivity extends ActionBarActivity implements OnArtistSelectedListener{
 
     private static final String SEARCH_ARTIST_FRAGMENT= "SearchArtist";
     private static final String TOP_TRACKS_FRAGMENT= "TopTracks";
@@ -29,7 +29,10 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
         spotifyService =new SpotifyApi().getService();
         SearchArtistFragment fragment = new SearchArtistFragment();
         fragment.setArguments(spotifyService);
-		replaceFragment(R.id.fragment_container, fragment, SEARCH_ARTIST_FRAGMENT);
+        if(savedInstanceState == null) {
+            replaceFragment(R.id.fragment_container, fragment, SEARCH_ARTIST_FRAGMENT);
+        }
+
 
     }
 
@@ -43,8 +46,9 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_settings:
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -58,10 +62,21 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
     }
 
 
-    public void replaceFragment(int oldFragmentId, Fragment newFragment, String tag){
+    private void replaceFragment(int oldFragmentId, Fragment newFragment, String tag){
         getSupportFragmentManager().beginTransaction()
                 .replace(oldFragmentId, newFragment,tag)
                 .addToBackStack(tag)
                 .commit();
     }
+
+    private void addFragment(Fragment fragment, String tag)
+    {
+        getSupportFragmentManager().beginTransaction()
+                .add(fragment, tag)
+                .commit();
+    }
+
+
+
+
 }

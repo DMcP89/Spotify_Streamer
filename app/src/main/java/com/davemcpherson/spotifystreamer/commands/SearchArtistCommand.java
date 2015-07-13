@@ -1,5 +1,6 @@
 package com.davemcpherson.spotifystreamer.commands;
 
+import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 
@@ -9,7 +10,11 @@ import kaaes.spotify.webapi.android.models.ArtistsPager;
 public class SearchArtistCommand extends SpotifyCommand {
 
     public SearchArtistCommand(SpotifyService ss) {
-        this.spotifyService = ss;
+        if(ss == null){
+            this.spotifyService = new SpotifyApi().getService();
+        }else{
+            this.spotifyService = ss;
+        }
     }
 
 

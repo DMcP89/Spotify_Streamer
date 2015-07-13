@@ -2,6 +2,7 @@ package com.davemcpherson.spotifystreamer.tasks;
 
 import android.os.AsyncTask;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.davemcpherson.spotifystreamer.adapters.ArtisitAdapter;
 import com.davemcpherson.spotifystreamer.commands.SearchArtistCommand;
@@ -28,7 +29,12 @@ public class SearchArtistTask extends AsyncTask<String, Void, ArtistsPager>{
 
     @Override
     protected void onPostExecute(ArtistsPager artistsPager) {
-        ArtisitAdapter artisitAdapter = new ArtisitAdapter(this.artistList.getContext(), artistsPager.artists.items);
-        this.artistList.setAdapter(artisitAdapter);
+        if(!artistsPager.artists.items.isEmpty()) {
+            ((ArtisitAdapter) artistList.getAdapter()).clear();
+            ((ArtisitAdapter) artistList.getAdapter()).addAll(artistsPager.artists.items);
+            ((ArtisitAdapter) artistList.getAdapter()).notifyDataSetChanged();
+        }else{
+            Toast.makeText(artistList.getContext(),"No Artist Found! Please refine search",Toast.LENGTH_SHORT).show();
+        }
     }
 }

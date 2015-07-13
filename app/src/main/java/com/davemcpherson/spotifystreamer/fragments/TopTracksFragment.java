@@ -1,17 +1,22 @@
 package com.davemcpherson.spotifystreamer.fragments;
-import android.support.v4.app.*;
-import android.os.*;
-import android.view.*;
-import android.widget.*;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.davemcpherson.spotifystreamer.R;
+import com.davemcpherson.spotifystreamer.adapters.TopTrackAdapter;
 import com.davemcpherson.spotifystreamer.commands.TopTracksCommand;
 import com.davemcpherson.spotifystreamer.tasks.TopTracksTask;
 
-import java.util.*;
+import java.util.ArrayList;
 
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.Track;
 
 public class TopTracksFragment extends Fragment
 {
@@ -20,24 +25,26 @@ public class TopTracksFragment extends Fragment
 	private Artist artist;
 	private SpotifyService spotifyService;
 
-	public TopTracksFragment(){}
+	public TopTracksFragment(){
+		getActivity().getActionBar().setTitle("Top Tracks");
+	}
 
 	public void setArguments(Artist a, SpotifyService ss){
 		this.artist = a;
 		this.spotifyService = ss;
+
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		View root = inflater.inflate(R.layout.fragment_top_tracks,container,false);
-		String[] test = {artist.name, this.getId()+"", R.layout.fragment_search_artists +""};
+
 		lv = (ListView)root.findViewById(R.id.tracksList);
-		lv.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.top_track_item, R.id.TrackNameTxt, Arrays.asList(test)));
+		TopTrackAdapter adapter = new TopTrackAdapter(getActivity(), new ArrayList<Track>(), artist.name);
+		lv.setAdapter(adapter);
 		TopTracksTask task = new TopTracksTask(new TopTracksCommand(spotifyService),lv);
 		task.execute(artist.id);
-
-
 		return root;
 	}
 	

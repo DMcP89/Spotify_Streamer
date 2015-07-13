@@ -2,7 +2,9 @@ package com.davemcpherson.spotifystreamer.tasks;
 
 import android.os.AsyncTask;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.davemcpherson.spotifystreamer.adapters.TopTrackAdapter;
 import com.davemcpherson.spotifystreamer.commands.TopTracksCommand;
 
 import kaaes.spotify.webapi.android.models.Tracks;
@@ -29,6 +31,12 @@ public class TopTracksTask extends AsyncTask<String,Void,Tracks>{
 
     @Override
     protected void onPostExecute(Tracks tracks) {
-
+        if(!tracks.tracks.isEmpty()) {
+            ((TopTrackAdapter) tracksList.getAdapter()).clear();
+            ((TopTrackAdapter) tracksList.getAdapter()).addAll(tracks.tracks);
+            ((TopTrackAdapter) tracksList.getAdapter()).notifyDataSetChanged();
+        }else{
+            Toast.makeText(tracksList.getContext(),"No Top Tracks found!",Toast.LENGTH_SHORT).show();
+        }
     }
 }
