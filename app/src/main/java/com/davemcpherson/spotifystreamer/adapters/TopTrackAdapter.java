@@ -1,6 +1,7 @@
 package com.davemcpherson.spotifystreamer.adapters;
 
 import android.content.Context;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,9 @@ public class TopTrackAdapter extends ArrayAdapter<Track> {
 
     private void populateImageView(ImageView iv, Track track){
         if(!track.album.images.isEmpty()){
-            Picasso.with(this.getContext()).load(track.album.images.get(0).url).into(iv);
+            if(Patterns.WEB_URL.matcher(track.album.images.get(0).url).matches()) {
+                Picasso.with(this.getContext()).load(track.album.images.get(0).url).into(iv);
+            }
         }else{
             iv.setImageResource(R.mipmap.ic_launcher);
         }

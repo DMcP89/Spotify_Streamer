@@ -30,12 +30,9 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
         SearchArtistFragment fragment = new SearchArtistFragment();
         fragment.setArguments(spotifyService);
         if(savedInstanceState == null) {
-            replaceFragment(R.id.fragment_container, fragment, SEARCH_ARTIST_FRAGMENT);
+            addFragment(fragment, SEARCH_ARTIST_FRAGMENT);
         }
-
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,6 +44,9 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
+            case android.R.id.home:
+                getSupportFragmentManager().popBackStack();
+                return true;
             case R.id.action_settings:
                 return true;
         }
@@ -72,7 +72,7 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
     private void addFragment(Fragment fragment, String tag)
     {
         getSupportFragmentManager().beginTransaction()
-                .add(fragment, tag)
+                .replace(R.id.fragment_container,fragment, tag)
                 .commit();
     }
 

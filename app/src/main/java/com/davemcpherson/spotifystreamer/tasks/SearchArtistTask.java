@@ -34,6 +34,8 @@ public class SearchArtistTask extends AsyncTask<String, Void, ArtistsPager>{
             ((ArtisitAdapter) artistList.getAdapter()).addAll(artistsPager.artists.items);
             ((ArtisitAdapter) artistList.getAdapter()).notifyDataSetChanged();
         }else{
+            ((ArtisitAdapter) artistList.getAdapter()).clear();
+            ((ArtisitAdapter) artistList.getAdapter()).notifyDataSetChanged();
             Toast.makeText(artistList.getContext(),"No Artist Found! Please refine search",Toast.LENGTH_SHORT).show();
         }
     }

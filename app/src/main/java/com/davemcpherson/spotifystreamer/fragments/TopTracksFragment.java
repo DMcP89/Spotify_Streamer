@@ -2,6 +2,8 @@ package com.davemcpherson.spotifystreamer.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +36,21 @@ public class TopTracksFragment extends Fragment
 		this.spotifyService = ss;
 
 	}
-	
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setupActionbar();
+	}
+
+
+	private void setupActionbar(){
+		ActionBar ab = ((ActionBarActivity) getActivity()).getSupportActionBar();
+		ab.setTitle("Top Tracks");
+		ab.setSubtitle(artist.name);
+		ab.setDisplayHomeAsUpEnabled(true);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{

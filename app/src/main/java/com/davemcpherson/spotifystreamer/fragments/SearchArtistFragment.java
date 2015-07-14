@@ -3,6 +3,8 @@ package com.davemcpherson.spotifystreamer.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -48,9 +50,24 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
         this.spotifyService = ss;
     }
 
+
+    @Override
     public void  onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         artistAdapter = new ArtisitAdapter(getActivity(), new ArrayList<Artist>());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupActionbar();
+    }
+
+    private void setupActionbar(){
+        ActionBar ab = ((ActionBarActivity)getActivity()).getSupportActionBar();
+        ab.setTitle("Spotify Streamer");
+        ab.setSubtitle("");
+        ab.setDisplayHomeAsUpEnabled(false);
     }
 
     @Override

@@ -36,6 +36,8 @@ public class TopTracksTask extends AsyncTask<String,Void,Tracks>{
             ((TopTrackAdapter) tracksList.getAdapter()).addAll(tracks.tracks);
             ((TopTrackAdapter) tracksList.getAdapter()).notifyDataSetChanged();
         }else{
+            ((TopTrackAdapter) tracksList.getAdapter()).clear();
+            ((TopTrackAdapter) tracksList.getAdapter()).notifyDataSetChanged();
             Toast.makeText(tracksList.getContext(),"No Top Tracks found!",Toast.LENGTH_SHORT).show();
         }
     }
