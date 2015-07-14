@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.KeyEvent;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,11 +30,12 @@ import kaaes.spotify.webapi.android.models.Artist;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class SearchArtistFragment extends Fragment implements OnItemClickListener, View.OnClickListener, View.OnKeyListener {
+public class SearchArtistFragment extends Fragment implements OnItemClickListener{
 
     private final static String PARCELABLE_TAG = "ArtistPager";
 
     private ListView artistList;
+    private SearchView artistSearch;
     private ArtisitAdapter artistAdapter;
     private EditText searchText;
     private ImageView searchBtn;
@@ -74,16 +74,24 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_search_artists, container, false);
-        Log.i("Parcelable Test", "OnCreateView Call, adapter size: "+artistAdapter.getCount());
+
+        artistSearch = (SearchView)root.findViewById(R.id.artistSearchView);
+        artistSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                searchForArtist(s);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
         artistList = (ListView) root.findViewById(R.id.ArtistList);
         artistList.setAdapter(artistAdapter);
         artistList.setOnItemClickListener(this);
-
-        searchText = (EditText) root.findViewById(R.id.SearchArtistTxt);
-        searchText.setOnKeyListener(this);
-
-        searchBtn = (ImageView) root.findViewById(R.id.SearchArtistBtn);
-        searchBtn.setOnClickListener(this);
 
         return root;
     }
@@ -112,22 +120,9 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
        artistSelectedListener.OnArtistSelect(selectedArtist);
 	}
 
-    @Override
-    public void onClick(View v) {
-        searchForArtist();
-    }
-
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if((event.getAction() ==  KeyEvent.ACTION_DOWN)&&(keyCode == KeyEvent.KEYCODE_ENTER)){
-            searchForArtist();
-        }
-        return false;
-    }
-
-    public void searchForArtist(){
+    public void searchForArtist(String s){
         SearchArtistTask task = new SearchArtistTask(new SearchArtistCommand(spotifyService), artistList);
-        task.execute(searchText.getText().toString());
+        task.execute(s);
     }
 
 
