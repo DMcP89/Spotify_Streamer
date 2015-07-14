@@ -20,7 +20,7 @@ import kaaes.spotify.webapi.android.models.Artist;
  * Created by dave on 6/27/2015.
  */
 public class ArtisitAdapter extends ArrayAdapter<Artist> {
-
+    private ViewHolder viewHolder;
     public ArtisitAdapter(Context context, List<Artist> objects) {
         super(context, 0, objects);
     }
@@ -31,18 +31,25 @@ public class ArtisitAdapter extends ArrayAdapter<Artist> {
 
         if(convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.artist_search_item, parent, false);
+            popualateViewHolder(convertView);
+        }else{
+            viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        ImageView artistImage = (ImageView)convertView.findViewById(R.id.ArtistImg);
-        populateImageView(artistImage,artist);
 
+        populateImageView(viewHolder.artistImage,artist);
 
-        TextView artitstName = (TextView)convertView.findViewById(R.id.ArtistNameTxt);
-        artitstName.setText(artist.name);
+        viewHolder.artistNameTxt.setText(artist.name);
 
         return convertView;
     }
 
+    private void popualateViewHolder(View convertView){
+        viewHolder = new ViewHolder();
+        viewHolder.artistNameTxt = (TextView)convertView.findViewById(R.id.ArtistNameTxt);
+        viewHolder.artistImage = (ImageView)convertView.findViewById(R.id.ArtistImg);
+        convertView.setTag(viewHolder);
+    }
 
     public void populateImageView(ImageView artistImage,Artist artist){
         if(!artist.images.isEmpty()) {
@@ -58,5 +65,10 @@ public class ArtisitAdapter extends ArrayAdapter<Artist> {
             objects.add(getItem(i));
         }
         return objects;
+    }
+
+    private static class ViewHolder{
+        TextView artistNameTxt;
+        ImageView artistImage;
     }
 }

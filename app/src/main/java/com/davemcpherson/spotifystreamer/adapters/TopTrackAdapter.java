@@ -20,7 +20,7 @@ import kaaes.spotify.webapi.android.models.Track;
  * Created by dave on 6/26/2015.
  */
 public class TopTrackAdapter extends ArrayAdapter<Track> {
-
+    private ViewHolder viewHolder;
     private String artistName;
 
     public TopTrackAdapter(Context context,List<Track> objects, String an) {
@@ -33,16 +33,25 @@ public class TopTrackAdapter extends ArrayAdapter<Track> {
         Track track = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.top_track_item, parent, false);
+            popualateViewHolder(convertView);
+        }else{
+            viewHolder = (ViewHolder)convertView.getTag();
         }
-        ImageView trackImage = (ImageView)convertView.findViewById(R.id.TrackImg);
-        populateImageView(trackImage,track);
 
-        TextView trackNameText = (TextView)convertView.findViewById(R.id.TrackNameTxt);
-        trackNameText.setText(track.name);
+        populateImageView(viewHolder.trackImage,track);
 
-        TextView artistNameText = (TextView)convertView.findViewById(R.id.ArtistNameTxt);
-        artistNameText.setText(artistName);
+        viewHolder.trackName.setText(track.name);
+
+        viewHolder.artistName.setText(artistName);
         return convertView;
+    }
+
+    private void popualateViewHolder(View convertView){
+        viewHolder = new ViewHolder();
+        viewHolder.artistName = (TextView)convertView.findViewById(R.id.ArtistNameTxt);
+        viewHolder.trackName = (TextView)convertView.findViewById(R.id.TrackNameTxt);
+        viewHolder.trackImage = (ImageView)convertView.findViewById(R.id.TrackImg);
+        convertView.setTag(viewHolder);
     }
 
     private void populateImageView(ImageView iv, Track track){
@@ -53,5 +62,11 @@ public class TopTrackAdapter extends ArrayAdapter<Track> {
         }else{
             iv.setImageResource(R.mipmap.ic_launcher);
         }
+    }
+
+    private static class ViewHolder{
+        TextView trackName;
+        TextView artistName;
+        ImageView trackImage;
     }
 }
