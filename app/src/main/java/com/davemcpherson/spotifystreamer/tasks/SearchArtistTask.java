@@ -29,7 +29,7 @@ public class SearchArtistTask extends AsyncTask<String, Void, ArtistsPager>{
 
     @Override
     protected void onPostExecute(ArtistsPager artistsPager) {
-        if(!artistsPager.artists.items.isEmpty()) {
+        if((artistsPager.artists != null)&&(!artistsPager.artists.items.isEmpty())) {
             ((ArtisitAdapter) artistList.getAdapter()).clear();
             ((ArtisitAdapter) artistList.getAdapter()).addAll(artistsPager.artists.items);
             ((ArtisitAdapter) artistList.getAdapter()).notifyDataSetChanged();

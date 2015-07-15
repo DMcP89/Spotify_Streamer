@@ -31,7 +31,7 @@ public class TopTracksTask extends AsyncTask<String,Void,Tracks>{
 
     @Override
     protected void onPostExecute(Tracks tracks) {
-        if(!tracks.tracks.isEmpty()) {
+        if((tracks.tracks != null)&&(!tracks.tracks.isEmpty())){
             ((TopTrackAdapter) tracksList.getAdapter()).clear();
             ((TopTrackAdapter) tracksList.getAdapter()).addAll(tracks.tracks);
             ((TopTrackAdapter) tracksList.getAdapter()).notifyDataSetChanged();
