@@ -1,5 +1,8 @@
 package com.davemcpherson.spotifystreamer;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -72,8 +75,16 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
     private void addFragment(Fragment fragment, String tag)
     {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container,fragment, tag)
+                .replace(R.id.fragment_container, fragment, tag)
                 .commit();
+    }
+
+    public boolean isNetworkConnected(){
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        boolean isConnected = ni != null &&
+                              ni.isConnectedOrConnecting();
+        return isConnected;
     }
 
 

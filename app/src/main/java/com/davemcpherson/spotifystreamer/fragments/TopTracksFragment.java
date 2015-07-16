@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.davemcpherson.spotifystreamer.MainActivity;
 import com.davemcpherson.spotifystreamer.R;
 import com.davemcpherson.spotifystreamer.adapters.TopTrackAdapter;
 import com.davemcpherson.spotifystreamer.commands.TopTracksCommand;
@@ -23,7 +25,7 @@ import kaaes.spotify.webapi.android.models.Track;
 public class TopTracksFragment extends Fragment
 {
 	
-	private ListView lv;
+	private ListView tracksList;
 	private Artist artist;
 	private SpotifyService spotifyService;
 
@@ -57,11 +59,15 @@ public class TopTracksFragment extends Fragment
 
 		View root = inflater.inflate(R.layout.fragment_top_tracks,container,false);
 
-		lv = (ListView)root.findViewById(R.id.tracksList);
+		tracksList = (ListView)root.findViewById(R.id.tracksList);
 		TopTrackAdapter adapter = new TopTrackAdapter(getActivity(), new ArrayList<Track>(), artist.name);
-		lv.setAdapter(adapter);
-		TopTracksTask task = new TopTracksTask(new TopTracksCommand(spotifyService),lv);
-		task.execute(artist.id);
+		tracksList.setAdapter(adapter);
+		if(((MainActivity)getActivity()).isNetworkConnected()) {
+			TopTracksTask task = new TopTracksTask(new TopTracksCommand(spotifyService), tracksList);
+			task.execute(artist.id);
+		}else{
+			Toast.makeText(getActivity(),"Please enable Network to Play",Toast.LENGTH_LONG).show();
+		}
 		return root;
 	}
 	

@@ -11,10 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.davemcpherson.spotifystreamer.MainActivity;
 import com.davemcpherson.spotifystreamer.R;
 import com.davemcpherson.spotifystreamer.adapters.ArtisitAdapter;
 import com.davemcpherson.spotifystreamer.commands.SearchArtistCommand;
@@ -37,8 +38,6 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
     private ListView artistList;
     private SearchView artistSearch;
     private ArtisitAdapter artistAdapter;
-    private EditText searchText;
-    private ImageView searchBtn;
     private SpotifyService spotifyService;
     private OnArtistSelectedListener artistSelectedListener;
 
@@ -114,15 +113,20 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
     }
 
 	@Override
-	public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4)
-	{
+	public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
         Artist selectedArtist = (Artist)artistList.getItemAtPosition(p3);
-       artistSelectedListener.OnArtistSelect(selectedArtist);
+        artistSelectedListener.OnArtistSelect(selectedArtist);
 	}
 
     public void searchForArtist(String s){
-        SearchArtistTask task = new SearchArtistTask(new SearchArtistCommand(spotifyService), artistList);
-        task.execute(s);
+        if(((MainActivity)getActivity()).isNetworkConnected()) {
+            SearchArtistTask task = new SearchArtistTask(new SearchArtistCommand(spotifyService), artistList);
+            task.execute(s);
+        }else{
+            Toast.makeText(getActivity(),"Please enable Network to search",Toast.LENGTH_LONG).show();
+            ((ArrayAdapter<Artist>)artistList.getAdapter()).clear();
+            ((ArrayAdapter<Artist>)artistList.getAdapter()).notifyDataSetChanged();
+        }
     }
 
 
