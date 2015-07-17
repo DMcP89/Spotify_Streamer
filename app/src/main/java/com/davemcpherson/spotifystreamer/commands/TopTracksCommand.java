@@ -22,7 +22,7 @@ public class TopTracksCommand extends SpotifyCommand {
         HashMap<String,Object> options = new HashMap<>();
         options.put("country","US");
         try {
-            return this.spotifyService.getArtistTopTrack(artist_id, options);
+            return this.spotifyService.getArtistTopTrack(artist_id, "US");
         }catch(RetrofitError error){
             Log.i("TopTracksCommand","Error caught");
             SpotifyError spotifyError = SpotifyError.fromRetrofitError(error);

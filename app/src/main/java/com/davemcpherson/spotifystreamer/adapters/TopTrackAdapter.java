@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.davemcpherson.spotifystreamer.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Track;
@@ -62,6 +63,14 @@ public class TopTrackAdapter extends ArrayAdapter<Track> {
         }else{
             iv.setImageResource(R.mipmap.ic_launcher);
         }
+    }
+
+    public ArrayList<Track> getArrayList(){
+        ArrayList<Track> objects = new ArrayList<>(getCount());
+        for (int i = 0; i < getCount(); i++) {
+            objects.add(getItem(i));
+        }
+        return objects;
     }
 
     private static class ViewHolder{

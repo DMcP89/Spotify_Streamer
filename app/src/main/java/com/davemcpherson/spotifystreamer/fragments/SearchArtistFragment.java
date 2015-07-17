@@ -42,7 +42,7 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
     private OnArtistSelectedListener artistSelectedListener;
 
 	public SearchArtistFragment() {
-        this.setRetainInstance(true);
+        //this.setRetainInstance(true);
     }
 
     public void  setArguments(SpotifyService ss){
@@ -53,7 +53,12 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
     @Override
     public void  onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        artistAdapter = new ArtisitAdapter(getActivity(), new ArrayList<Artist>());
+        if(savedInstanceState == null) {
+            artistAdapter = new ArtisitAdapter(getActivity(), new ArrayList<Artist>());
+        }else{
+            ArrayList<Artist> list = savedInstanceState.getParcelableArrayList("ArtistList");
+            artistAdapter = new ArtisitAdapter(getActivity(),list);
+        }
     }
 
     @Override
@@ -99,6 +104,8 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("ArtistList",artistAdapter.getArrayList());
+
     }
 
     @Override
@@ -128,7 +135,5 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
             ((ArrayAdapter<Artist>)artistList.getAdapter()).notifyDataSetChanged();
         }
     }
-
-
 
 }

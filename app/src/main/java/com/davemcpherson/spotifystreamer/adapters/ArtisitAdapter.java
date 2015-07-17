@@ -28,7 +28,6 @@ public class ArtisitAdapter extends ArrayAdapter<Artist> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
         Artist artist = getItem(position);
-
         if(convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.artist_search_item, parent, false);
             popualateViewHolder(convertView);

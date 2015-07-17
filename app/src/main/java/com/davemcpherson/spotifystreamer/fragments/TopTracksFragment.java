@@ -26,11 +26,13 @@ public class TopTracksFragment extends Fragment
 {
 	
 	private ListView tracksList;
+	private TopTrackAdapter trackAdapter;
 	private Artist artist;
 	private SpotifyService spotifyService;
 
 	public TopTracksFragment(){
-		this.setRetainInstance(true);
+
+		//this.setRetainInstance(true);
 	}
 
 	public void setArguments(Artist a, SpotifyService ss){
@@ -42,9 +44,22 @@ public class TopTracksFragment extends Fragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setupActionbar();
+		if(savedInstanceState == null){
+			trackAdapter = new TopTrackAdapter(getActivity(), new ArrayList<Track>(), artist.name);
+		}else{
+			artist = savedInstanceState.getParcelable("Artist");
+			ArrayList<Track> list = savedInstanceState.getParcelableArrayList("TrackList");
+			trackAdapter = new TopTrackAdapter(getActivity(),list, artist.name);
+		}
+
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelableArrayList("TrackList", trackAdapter.getArrayList());
+		outState.putParcelable("Artist", artist);
+	}
 
 	private void setupActionbar(){
 		ActionBar ab = ((ActionBarActivity) getActivity()).getSupportActionBar();
@@ -53,20 +68,25 @@ public class TopTracksFragment extends Fragment
 		ab.setDisplayHomeAsUpEnabled(true);
 	}
 
+	private boolean checkActionBar(){
+		ActionBar ab = ((ActionBarActivity) getActivity()).getSupportActionBar();
+		return  ab == null;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-
+		setupActionbar();
 		View root = inflater.inflate(R.layout.fragment_top_tracks,container,false);
-
 		tracksList = (ListView)root.findViewById(R.id.tracksList);
-		TopTrackAdapter adapter = new TopTrackAdapter(getActivity(), new ArrayList<Track>(), artist.name);
-		tracksList.setAdapter(adapter);
-		if(((MainActivity)getActivity()).isNetworkConnected()) {
+		tracksList.setAdapter(trackAdapter);
+		if(((MainActivity)getActivity()).isNetworkConnected() && trackAdapter.isEmpty()) {
 			TopTracksTask task = new TopTracksTask(new TopTracksCommand(spotifyService), tracksList);
 			task.execute(artist.id);
+		}else if(!((MainActivity)getActivity()).isNetworkConnected()){
+			Toast.makeText(getActivity(),"Please enable Network",Toast.LENGTH_LONG).show();
 		}else{
-			Toast.makeText(getActivity(),"Please enable Network to Play",Toast.LENGTH_LONG).show();
+
 		}
 		return root;
 	}
