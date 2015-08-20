@@ -9,19 +9,23 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.davemcpherson.spotifystreamer.fragments.PlayerFragment;
 import com.davemcpherson.spotifystreamer.fragments.SearchArtistFragment;
 import com.davemcpherson.spotifystreamer.fragments.TopTracksFragment;
 import com.davemcpherson.spotifystreamer.listeners.OnArtistSelectedListener;
+import com.davemcpherson.spotifystreamer.listeners.OnTrackSelectedListener;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.Track;
 
 
-public class MainActivity extends ActionBarActivity implements OnArtistSelectedListener{
+public class MainActivity extends ActionBarActivity implements OnArtistSelectedListener, OnTrackSelectedListener{
 
     private static final String SEARCH_ARTIST_FRAGMENT= "SearchArtist";
     private static final String TOP_TRACKS_FRAGMENT= "TopTracks";
+    private static final String PLAYER_FRAGMENT= "Player";
 
     private SpotifyService spotifyService;
 
@@ -64,6 +68,17 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
         replaceFragment(oldFrag.getId(),newFrag,TOP_TRACKS_FRAGMENT);
     }
 
+    @Override
+    public void OnTrackSelected(Track track) {
+        PlayerFragment newFrag = new PlayerFragment();
+        Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(TOP_TRACKS_FRAGMENT);
+        replaceFragment(oldFrag.getId(),newFrag, PLAYER_FRAGMENT);
+    }
+
+    private void handleItemSelection(String fragCode,Bundle args){
+        Fragment newFrag;
+
+    }
 
     private void replaceFragment(int oldFragmentId, Fragment newFragment, String tag){
         getSupportFragmentManager().beginTransaction()
