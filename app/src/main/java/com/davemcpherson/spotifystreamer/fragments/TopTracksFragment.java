@@ -109,7 +109,6 @@ public class TopTracksFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Track selectedTrack = (Track)tracksList.getItemAtPosition(position);
-        listener.OnTrackSelected(selectedTrack);
+        listener.OnTrackSelected(trackAdapter.getArrayList(), position);
     }
 }

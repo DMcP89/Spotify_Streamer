@@ -15,6 +15,8 @@ import com.davemcpherson.spotifystreamer.fragments.TopTracksFragment;
 import com.davemcpherson.spotifystreamer.listeners.OnArtistSelectedListener;
 import com.davemcpherson.spotifystreamer.listeners.OnTrackSelectedListener;
 
+import java.util.List;
+
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
@@ -69,8 +71,9 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
     }
 
     @Override
-    public void OnTrackSelected(Track track) {
+    public void OnTrackSelected(List<Track> tracks, int postion) {
         PlayerFragment newFrag = new PlayerFragment();
+        newFrag.setArguments(tracks,postion);
         Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(TOP_TRACKS_FRAGMENT);
         replaceFragment(oldFrag.getId(),newFrag, PLAYER_FRAGMENT);
     }

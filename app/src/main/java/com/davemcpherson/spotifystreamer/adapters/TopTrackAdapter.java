@@ -23,10 +23,12 @@ import kaaes.spotify.webapi.android.models.Track;
 public class TopTrackAdapter extends ArrayAdapter<Track> {
     private ViewHolder viewHolder;
     private String artistName;
+    private ArrayList<Track> tracks;
 
     public TopTrackAdapter(Context context,List<Track> objects, String an) {
         super(context, 0, objects);
         this.artistName = an;
+
     }
 
     @Override
