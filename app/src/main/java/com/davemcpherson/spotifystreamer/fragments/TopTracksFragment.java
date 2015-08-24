@@ -21,6 +21,7 @@ import com.davemcpherson.spotifystreamer.tasks.TopTracksTask;
 
 import java.util.ArrayList;
 
+import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
@@ -39,15 +40,15 @@ public class TopTracksFragment extends Fragment implements AdapterView.OnItemCli
 		//this.setRetainInstance(true);
 	}
 
-	public void setArguments(Artist a, SpotifyService ss){
+	public void setArguments(Artist a){
 		this.artist = a;
-		this.spotifyService = ss;
 
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        spotifyService = new SpotifyApi().getService();
 		if(savedInstanceState == null){
 			trackAdapter = new TopTrackAdapter(getActivity(), new ArrayList<Track>(), artist.name);
 		}else{
@@ -109,7 +110,6 @@ public class TopTracksFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Track selectedTrack = (Track)tracksList.getItemAtPosition(position);
-        listener.OnTrackSelected(selectedTrack);
+        listener.OnTrackSelected(trackAdapter.getArrayList(), position);
     }
 }

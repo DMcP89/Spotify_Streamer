@@ -43,17 +43,19 @@
         android:id="@+id/TrackTimeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/currentSeconds"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
             android:textAlignment="center"/>
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/totalSeconds"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -67,25 +69,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
 
         <ImageButton
             android:id="@+id/PreviousBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_media_previous"
+            />
 
         <ImageButton
             android:id="@+id/PlayBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_media_pause"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            />
 
         <ImageButton
             android:id="@+id/NextBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_media_next"
+            />
     </LinearLayout>
 
 </LinearLayout>
