@@ -24,6 +24,7 @@ import com.davemcpherson.spotifystreamer.tasks.SearchArtistTask;
 
 import java.util.ArrayList;
 
+import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 
@@ -45,14 +46,11 @@ public class SearchArtistFragment extends Fragment implements OnItemClickListene
         //this.setRetainInstance(true);
     }
 
-    public void  setArguments(SpotifyService ss){
-        this.spotifyService = ss;
-    }
-
 
     @Override
     public void  onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        spotifyService =  new SpotifyApi().getService();
         if(savedInstanceState == null) {
             artistAdapter = new ArtisitAdapter(getActivity(), new ArrayList<Artist>());
         }else{

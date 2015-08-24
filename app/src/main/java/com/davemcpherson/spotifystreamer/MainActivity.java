@@ -17,8 +17,6 @@ import com.davemcpherson.spotifystreamer.listeners.OnTrackSelectedListener;
 
 import java.util.List;
 
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
@@ -29,15 +27,18 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
     private static final String TOP_TRACKS_FRAGMENT= "TopTracks";
     private static final String PLAYER_FRAGMENT= "Player";
 
-    private SpotifyService spotifyService;
+    private boolean twoPaneMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        spotifyService =new SpotifyApi().getService();
+
+        if(findViewById(R.id.top_tracks_container) != null){
+            twoPaneMode = true;
+        }
+
         SearchArtistFragment fragment = new SearchArtistFragment();
-        fragment.setArguments(spotifyService);
         if(savedInstanceState == null) {
             addFragment(fragment, SEARCH_ARTIST_FRAGMENT);
         }
@@ -65,17 +66,25 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
     @Override
     public void OnArtistSelect(Artist artist) {
         TopTracksFragment newFrag = new TopTracksFragment();
-        newFrag.setArguments(artist, spotifyService);
-        Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(SEARCH_ARTIST_FRAGMENT);
-        replaceFragment(oldFrag.getId(),newFrag,TOP_TRACKS_FRAGMENT);
+        newFrag.setArguments(artist);
+        if(!twoPaneMode) {
+            Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(SEARCH_ARTIST_FRAGMENT);
+            replaceFragment(oldFrag.getId(), newFrag, TOP_TRACKS_FRAGMENT);
+        }else{
+            replaceFragment(R.id.top_tracks_container, newFrag, TOP_TRACKS_FRAGMENT);
+        }
     }
 
     @Override
     public void OnTrackSelected(List<Track> tracks, int postion) {
         PlayerFragment newFrag = new PlayerFragment();
         newFrag.setArguments(tracks,postion);
-        Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(TOP_TRACKS_FRAGMENT);
-        replaceFragment(oldFrag.getId(),newFrag, PLAYER_FRAGMENT);
+        if(!twoPaneMode) {
+            Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(TOP_TRACKS_FRAGMENT);
+            replaceFragment(oldFrag.getId(), newFrag, PLAYER_FRAGMENT);
+        }else{
+            newFrag.show(getSupportFragmentManager(),"dialog");
+        }
     }
 
     private void handleItemSelection(String fragCode,Bundle args){
