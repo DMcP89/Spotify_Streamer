@@ -1,10 +1,14 @@
 package com.davemcpherson.spotifystreamer.fragments;
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +19,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.davemcpherson.spotifystreamer.R;
+import com.davemcpherson.spotifystreamer.services.MediaPlayerService;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Track;
@@ -27,12 +31,17 @@ import kaaes.spotify.webapi.android.models.Track;
  */
 public class PlayerFragment extends DialogFragment{
 
+    private final static String TAG = PlayerFragment.class.getSimpleName();
+
     private List<Track> tracks;
     private int selectedIndex;
     private Track currentTrack;
     private View root;
+    private boolean isPlaying;
+    private boolean bound;
+    private Intent mediaPlayerIntnet;
+    private MediaPlayerService mService;
 
-    private MediaPlayer myPlayer = new MediaPlayer();
 
     public void setArguments(List<Track> trackList, int selectedPosition) {
         this.tracks = trackList;
@@ -40,22 +49,44 @@ public class PlayerFragment extends DialogFragment{
         this.currentTrack = trackList.get(selectedPosition);
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(this.getTag(),"onCreate");
         super.onCreate(savedInstanceState);
         this.setRetainInstance(true);
+        mediaPlayerIntnet = new Intent(getActivity(), MediaPlayerService.class);
+        mediaPlayerIntnet.putExtra(MediaPlayerService.URL, currentTrack.preview_url);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_player, container, false);
-        startMediaPlayer();
-        setupSeekBar();
+        Log.d(this.getTag(),"onCreateView");
+        //startMediaPlayer();
+        //setupSeekBar();
         setupPlayerforTrack(currentTrack);
         initImageButtons();
-
-
+        isPlaying = true;
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(this.getTag(), "onStart");
+        getActivity().bindService(mediaPlayerIntnet, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(this.getTag(), "onStop");
+        if(bound){
+            getActivity().unbindService(mConnection);
+            bound=false;
+        }
     }
 
     private void setupPlayerforTrack(Track track){
@@ -74,16 +105,18 @@ public class PlayerFragment extends DialogFragment{
     }
 
     private void initImageButtons(){
-        final ImageButton playPause = (ImageButton)root.findViewById(R.id.PlayBtn);
+        ImageButton playPause = (ImageButton)root.findViewById(R.id.PlayBtn);
         playPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (myPlayer.isPlaying()) {
-                    playPause.setImageResource(android.R.drawable.ic_media_play);
-                    myPlayer.pause();
+                if (isPlaying) {
+                    ((ImageButton) v).setImageResource(android.R.drawable.ic_media_play);
+                    mService.pauseMediaPlayer();
+                    isPlaying = false;
                 } else {
-                    playPause.setImageResource(android.R.drawable.ic_media_pause);
-                    myPlayer.start();
+                    ((ImageButton) v).setImageResource(android.R.drawable.ic_media_pause);
+                    mService.startMediaPlayer();
+                    isPlaying = true;
                 }
             }
         });
@@ -102,31 +135,13 @@ public class PlayerFragment extends DialogFragment{
     }
 
 
-
-    private void startMediaPlayer(){
-        myPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            myPlayer.setDataSource(currentTrack.preview_url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            myPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        myPlayer.start();
-    }
-
     private void setupSeekBar(){
         final SeekBar seekBar = (SeekBar)root.findViewById(R.id.TrackSeekBar);
         seekBar.setMax(30);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(myPlayer != null && fromUser){
-                    myPlayer.seekTo(progress * 1000);
-                }
+               //seek to progess
             }
 
             @Override
@@ -139,13 +154,7 @@ public class PlayerFragment extends DialogFragment{
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(myPlayer != null){
-                    int currentPosition = myPlayer.getCurrentPosition()/1000;
-                    seekBar.setProgress(currentPosition);
-                    String currentSeconds = (currentPosition < 10)? "0:0"+currentPosition : "0:"+currentPosition;
-                    setupTextView((TextView)root.findViewById(R.id.currentSeconds),currentSeconds);
-                }
-                handler.postDelayed(this,1000);
+                //update progress bar
             }
         });
     }
@@ -154,17 +163,27 @@ public class PlayerFragment extends DialogFragment{
         v.setText(text);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
-    @Override
-    public void onDestroy() {
-        myPlayer.stop();
-        myPlayer.release();
-        super.onDestroy();
-    }
+
+
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            Log.d(PlayerFragment.TAG, "serviceConnected");
+            MediaPlayerService.LocalBinder binder = (MediaPlayerService.LocalBinder) iBinder;
+            mService = binder.getService();
+            mService.startService(mediaPlayerIntnet);
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            bound = false;
+        }
+    };
+
+
 
     private class SongNavigationClickListener implements View.OnClickListener{
 
@@ -185,8 +204,6 @@ public class PlayerFragment extends DialogFragment{
                 selectedIndex = (selectedIndex == tracks.size()-1)? 0 : selectedIndex+1;
             }
             setupPlayerforTrack(tracks.get(selectedIndex));
-            myPlayer.reset();
-            startMediaPlayer();
         }
     }
 }

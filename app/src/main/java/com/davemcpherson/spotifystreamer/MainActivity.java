@@ -87,11 +87,6 @@ public class MainActivity extends ActionBarActivity implements OnArtistSelectedL
         }
     }
 
-    private void handleItemSelection(String fragCode,Bundle args){
-        Fragment newFrag;
-
-    }
-
     private void replaceFragment(int oldFragmentId, Fragment newFragment, String tag){
         getSupportFragmentManager().beginTransaction()
                 .replace(oldFragmentId, newFragment,tag)
