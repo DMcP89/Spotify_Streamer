@@ -22,6 +22,7 @@ import com.davemcpherson.spotifystreamer.R;
 import com.davemcpherson.spotifystreamer.services.MediaPlayerService;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Track;
@@ -65,7 +66,7 @@ public class PlayerFragment extends DialogFragment{
         root = inflater.inflate(R.layout.fragment_player, container, false);
         Log.d(this.getTag(),"onCreateView");
         //startMediaPlayer();
-        //setupSeekBar();
+        setupSeekBar();
         setupPlayerforTrack(currentTrack);
         initImageButtons();
         isPlaying = true;
@@ -93,7 +94,6 @@ public class PlayerFragment extends DialogFragment{
         currentTrack = track;
         initTextViews();
         populateAlbumImage((ImageView) root.findViewById(R.id.AlbumImage));
-
     }
 
     private void initTextViews(){
@@ -141,7 +141,8 @@ public class PlayerFragment extends DialogFragment{
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-               //seek to progess
+              if(fromUser)
+                mService.seekMediaPlayerTo(progress * 1000);
             }
 
             @Override
@@ -154,7 +155,17 @@ public class PlayerFragment extends DialogFragment{
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //update progress bar
+                if(mService != null) {
+                   int currentPosition = (mService.getMediaPlayerPosition() / 1000)+1;
+                   seekBar.setProgress(currentPosition);
+                   String currentSeconds = (currentPosition < 10) ? "0:0" + currentPosition : "0:" + currentPosition;
+                   setupTextView((TextView) root.findViewById(R.id.currentSeconds), currentSeconds);
+                   Log.d(TAG, "CurrentPosition: "+currentPosition);
+                   if(currentPosition == 30){
+                        moveToNewTrack(1);
+                   }
+                }
+                handler.postDelayed(this,1000);
             }
         });
     }
@@ -199,11 +210,27 @@ public class PlayerFragment extends DialogFragment{
         @Override
         public void onClick(View v) {
             if(state == PREVIOUS_CODE){
-                selectedIndex = (selectedIndex == 0)? tracks.size()-1 : selectedIndex-1;
+                moveToNewTrack(-1);
             }else{
-                selectedIndex = (selectedIndex == tracks.size()-1)? 0 : selectedIndex+1;
+                moveToNewTrack(1);
             }
-            setupPlayerforTrack(tracks.get(selectedIndex));
+
+        }
+    }
+
+    private void moveToNewTrack(int move){
+        if(move > 0){
+            selectedIndex = (selectedIndex == tracks.size()-1)? 0 : selectedIndex+1;
+        }else{
+            selectedIndex = (selectedIndex == 0)? tracks.size()-1 : selectedIndex-1;
+        }
+        setupPlayerforTrack(tracks.get(selectedIndex));
+        mediaPlayerIntnet.putExtra(MediaPlayerService.URL, currentTrack.preview_url);
+        try {
+            mService.setupMediaPlayer(mediaPlayerIntnet);
+            mService.startMediaPlayer();
+        }catch (IOException e){
+
         }
     }
 }

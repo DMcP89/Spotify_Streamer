@@ -18,9 +18,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private final IBinder mBinder = new LocalBinder();
 
     public static final String URL = "trackUrl";
-    public static final String POSITION = "trackPosition";
+    public boolean complete = false;
 
     private MediaPlayer myMediaPlayer = new MediaPlayer();
+
 
     public MediaPlayerService(){
     }
@@ -38,8 +39,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
         if(!myMediaPlayer.isPlaying()){
             try {
-                myMediaPlayer.setDataSource(intent.getStringExtra(URL));
-                myMediaPlayer.prepare();
+                setupMediaPlayer(intent);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -65,12 +65,16 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        stopSelf();
+        Log.d(MediaPlayerService.class.getSimpleName(),"MediaPlayer complete");
+        complete = true;
     }
 
 
-    public long getMediaPlayerPosition(){
-        return myMediaPlayer.getCurrentPosition();
+    public int getMediaPlayerPosition(){
+        if(myMediaPlayer !=null) {
+            return myMediaPlayer.getCurrentPosition();
+        }
+        return 0;
     }
 
     public void pauseMediaPlayer(){
@@ -86,7 +90,18 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     public void seekMediaPlayerTo(int position){
-        myMediaPlayer.seekTo(position);
+        if(myMediaPlayer != null) {
+            myMediaPlayer.seekTo(position);
+        }
+    }
+
+    public void setupMediaPlayer(Intent intent) throws IOException{
+        if(myMediaPlayer.isPlaying()) {
+            myMediaPlayer.stop();
+            myMediaPlayer.reset();
+        }
+        myMediaPlayer.setDataSource(intent.getStringExtra(URL));
+        myMediaPlayer.prepare();
     }
 
 
